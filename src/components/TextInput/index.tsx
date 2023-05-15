@@ -1,4 +1,4 @@
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 
 type InputProps = Omit<React.HTMLProps<HTMLInputElement>, 'onChange'> & {
   label: string;
@@ -7,7 +7,7 @@ type InputProps = Omit<React.HTMLProps<HTMLInputElement>, 'onChange'> & {
 
 const TextInput = ({ label, value, onChange, ...restProps }: InputProps) => {
   return (
-    <label className={styles.wrap}>
+    <label className={styles.input_wrap}>
       <div className={styles.caption}>{label}</div>
       <input
         className={styles.input}

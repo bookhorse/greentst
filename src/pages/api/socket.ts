@@ -2,7 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Server as IOServer, Socket as IOSocket } from 'socket.io';
 import type { Socket as NetSocket } from 'net';
 import type { Server as HTTPServer } from 'http';
-import { ReceiveNotificationResponse } from '@/lib/greenapi/types';
+import { Credentials, ReceiveNotificationResponse, TextMessage } from '@/lib/greenapi/types';
+import { sendTextMessage } from '@/lib/greenapi';
+import NotificationPoller from '@/lib/greenapi/poller';
+
+const POLL_INTERVAL = 5000;
 
 interface SocketServer extends HTTPServer {
   io?: IOServer | undefined
@@ -16,23 +20,60 @@ interface NextApiResponseWithSocket extends NextApiResponse {
   socket: SocketWithIO;
 };
 
-interface ClientToServerEvents {
-  message: (msg: string) => void;
+export interface ClientToServerEvents {
+  auth: (auth: Credentials) => void;
+  message: (chatId: string, message: string) => void;
 };
 
-interface ServerToClientEvents {
+export interface ServerToClientEvents {
   notification: (data: ReceiveNotificationResponse) => void;
+  error: (message: string) => void;
 };
 
+const makeChatId = (telephone: string) => {
+  const numbers = telephone.replace('+', '');
+
+  return `${numbers.trim()}@c.us`;
+};
 
 const messageHandler = (_io: IOServer, socket: IOSocket<ClientToServerEvents, ServerToClientEvents>) => {
+  console.log(socket.id);
+  const poller = new NotificationPoller(POLL_INTERVAL);
+  let clientCredentials: Credentials | null = null;
+
+  const makeError = (msg: string) => {
+    socket.emit('error', msg);
+    poller.stop();
+  };
+
   socket.on('disconnect', () => {
-    console.log('disconnected!');
+    poller.stop();
   });
 
-  socket.on('message', (msg: string) => {
-    console.log(msg);
-    //socket.emit('notification', 'test');
+  socket.on('auth', (auth: Credentials) => {
+    poller.stop();
+    clientCredentials = auth;
+    poller.start(clientCredentials, (data) => {
+      socket.emit('notification', data);
+    }, () => {
+      makeError('wrong auth');
+    });
+  });
+
+  socket.on('message', (chatId, message) => {
+    if (clientCredentials) {
+      const data: TextMessage = {
+        chatId: makeChatId(chatId),
+        message
+      };
+      try {
+        sendTextMessage(clientCredentials, data);
+      } catch {
+        makeError('wrong auth');
+      }
+    } else {
+      makeError('wrong auth');
+    }
   });
 };
 

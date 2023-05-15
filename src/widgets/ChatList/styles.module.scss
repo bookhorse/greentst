@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 30%;
+  max-width: 30%;
+  background-color: #f0f2f5;
+}
+
+.header {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+
+  & > div + div {
+    margin-left: 16px;
+  }
+}
+
+.chat_list {
+  background-color: #fff;
+  flex-grow: 1;
+}
+
+.chat_item {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  height: 72px;
+  justify-content: center;
+  padding: 15px;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eee;
+  }
+}
+
+.highlight {
+  background-color: #eee;
+}
+
+.empty {
+  text-align: center;
+  margin-top: 20px;
+  color: #555;
+}
+
+.last_message {
+  font-size: 14px;
+  margin-top: 4px;
+  color: #333;
+}

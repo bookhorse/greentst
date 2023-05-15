@@ -1,25 +1,30 @@
-import { useState } from 'react';
-import { Credentials } from '@/lib/greenapi/types';
+import { useEffect, useState } from 'react';
+import useStore from '@/store';
 import TextInput from '../TextInput';
 import Modal from '../Modal';
 
 interface Props {
-  auth: Credentials | null;
   open: boolean;
-  onChange: (data: Credentials) => void;
   onClose: () => void;
 };
 
-const AuthModal = ({auth, open, onChange, onClose}: Props) => {
-  const [token, setToken] = useState(auth?.apiToken || '');
-  const [instance, setInstance] = useState(auth?.waInstance || '');
+const AuthModal = ({ open, onClose }: Props) => {
+  const [auth, setAuth] = useStore(store => [store.auth, store.setAuth]);
+  const [token, setToken] = useState('');
+  const [instance, setInstance] = useState('');
+
+  useEffect(() => {
+    setToken(auth?.apiToken || '');
+    setInstance(auth?.waInstance || '');
+  }, [auth]);
 
   const handleSave = () => {
     if (token && instance) {
-      onChange({
+      setAuth({
         apiToken: token,
         waInstance: instance
       });
+      onClose();
     }
   };
 

@@ -35,6 +35,6 @@ export const receiveNotification = async (auth: Credentials): Promise<ReceiveNot
 };
 
 export const deleteNotification = async (auth: Credentials, receiptId: number): Promise<DeleteNotificationResponse> => {
-  const res = await http.get(makeUrl(auth, DELETE_NOTIFICATION, receiptId));
+  const res = await http.delete(makeUrl(auth, DELETE_NOTIFICATION, receiptId));
   return res;
 };

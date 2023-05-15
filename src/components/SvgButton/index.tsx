@@ -1,4 +1,4 @@
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 
 interface Props {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface Props {
 
 const SvgButton = ({children, ...restProps}: React.HTMLProps<HTMLButtonElement> & Props) => {
   return (
-    <button className={styles.button} {...restProps}>
+    <button className={styles.iconbutton} {...restProps}>
       {children}
     </button>
   );

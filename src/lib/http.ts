@@ -1,6 +1,7 @@
 import { JSONValue } from '@/types';
 
 const convertResponse = async (res: Response) => {
+  if (res.status >= 403) throw new Error('Unauthorized');
   const contentType = res.headers.get('content-type');
 
   if (contentType && contentType.indexOf('application/json') !== -1) {

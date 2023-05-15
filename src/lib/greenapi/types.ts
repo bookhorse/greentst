@@ -50,9 +50,18 @@ export interface IncomeMessage {
 export type TextMessageData = IncomeMessage & {
   textMessageData: {
     textMessage: string;
-    isTemplateMessage: boolean;
+    isTemplateMessage?: boolean;
   };
   quotedMessage?: QuotedMessage;
+};
+
+
+export type QuotedMessageData = IncomeMessage & {
+  extendedTextMessageData: {
+    text: string;
+    stanzaId: string;
+    participant: string;
+  };
 };
 
 export type ReactionMessageData = IncomeMessage & {
@@ -62,7 +71,7 @@ export type ReactionMessageData = IncomeMessage & {
   quotedMessage: QuotedMessage;
 };
 
-export type MessageData = TextMessageData | ReactionMessageData;
+export type MessageData = TextMessageData | ReactionMessageData | QuotedMessageData;
 
 export type NotificationBody = {
   typeWebhook: string;

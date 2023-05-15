@@ -1,13 +1,14 @@
-.wrap {
+.input_wrap {
   display: block;
+
+  .caption {
+    margin-bottom: 2px;
+  }
+
+  .input {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
 }
 
-.caption {
-  margin-bottom: 2px;
-}
-
-.input {
-  width: 100%;
-  margin-bottom: 10px;
-  font-size: 20px;
-}
