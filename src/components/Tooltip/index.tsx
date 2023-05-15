@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 
 type Props = React.HTMLProps<HTMLDivElement> & {
   text: string;

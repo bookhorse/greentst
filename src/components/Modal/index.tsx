@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import styles from './styles.module.scss';
+import styles from '../styles.module.scss';
 import { createPortal } from 'react-dom';
 import Button from '../Button';
 

@@ -2,6 +2,7 @@ import { attachCallback } from '@/lib/wsclient';
 import { useEffect } from 'react';
 import useStore from '@/store';
 import { MessageData, NotificationBody, QuotedMessageData, TextMessageData } from '@/lib/greenapi/types';
+import { QUOTED_MESSAGE, TEXT_MESSAGE, WEBHOOK_INCOMING_MSG_RECV } from '@/lib/greenapi/const';
 
 const getPhone = (chatId: string) => {
   const pos = chatId.indexOf('@');
@@ -10,9 +11,9 @@ const getPhone = (chatId: string) => {
 };
 
 const getMsg = (data: MessageData) => {
-  if (data.typeMessage === 'textMessage') {
+  if (data.typeMessage === TEXT_MESSAGE) {
     return (data as TextMessageData).textMessageData.textMessage;
-  } else if (data.typeMessage === 'quotedMessage') {
+  } else if (data.typeMessage === QUOTED_MESSAGE) {
     return (data as QuotedMessageData).extendedTextMessageData.text;
   } else {
     return null;
@@ -21,7 +22,7 @@ const getMsg = (data: MessageData) => {
 
 const processNotification = (data: NotificationBody) => {
   const { typeWebhook, timestamp, senderData, messageData, idMessage } = data;
-  if (typeWebhook !== 'incomingMessageReceived') return null;
+  if (typeWebhook !== WEBHOOK_INCOMING_MSG_RECV) return null;
   const message = getMsg(messageData);
   if (message === null) return null;
 
